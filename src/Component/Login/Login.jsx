@@ -1,5 +1,8 @@
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
-
+import app from '../../firebase/firebase.config';
+import { Link } from 'react-router-dom';
+const auth = getAuth(app);
 const Login = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -26,6 +29,19 @@ const Login = () => {
             setError('please at lest 6 character password')
             return;
         }
+        signInWithEmailAndPassword(auth, email, password)
+            .then(result => {
+                const loggedUser = result.user;
+                console.log(loggedUser);
+                if(!loggedUser.emailVerified){
+                    alert('not veryfied yet')
+                }
+                setSuccess('user login successfully');
+                setError('');
+            })
+            .catch(error => {
+                console.log(error.message);
+            })
     }
     return (
         <div>
@@ -46,6 +62,7 @@ const Login = () => {
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
+            <p><small>new to this website ?please <Link to="/register">Register</Link></small></p>
             <p className='text-danger'>{error}</p>
             <p className='text-success'>{success}</p>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from 'firebase/auth'
 import app from '../../firebase/firebase.config';
+import { Link } from 'react-router-dom';
 const auth = getAuth(app);
 const Rigister = () => {
     // const [email, setEmail] = useState('');
@@ -40,12 +41,22 @@ const Rigister = () => {
                 // submit korle jate from kali hoi tai nicar code
                 event.target.reset();
                 setSucces('user has created successfully');
+                sendVeriFicationEmail(user);
             })
             .catch(error => {
                 console.log(error.message);
                 setError(error.message);
                 setSucces('');
             })
+    }
+    const sendVeriFicationEmail =(user)=>{
+        sendEmailVerification(result.user)
+        .then(result =>{
+            console.log(result);
+        alert('please verify your email adress')
+        })
+
+
     }
     const handleEmailChange = (event) => {
         console.log(event.target.value);
@@ -65,6 +76,7 @@ const Rigister = () => {
                 <input className='btn btn-primary' type="submit" value='Register' />
 
             </form>
+            <p><small>alredy have an accout? please <Link to="/login">Log in</Link></small></p>
         </div>
     );
 };
